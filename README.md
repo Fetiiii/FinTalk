@@ -73,7 +73,7 @@ hf_hub_download(
     filename="Llama-3-8B-Instruct-Finance-RAG.Q4_K_S.gguf"
 )
 ```
-
+Or go to link and download manually-->(https://huggingface.co/QuantFactory/Llama-3-8B-Instruct-Finance-RAG-GGUF)
 
 ### 4️⃣ Run Application
 
@@ -91,7 +91,7 @@ Then open your browser.
 
 Try the live demo on Hugging Face Spaces:
 
-👉 **[FinTalk on Hugging Face Spaces](https://huggingface.co/spaces/fetii/FinTalk)**
+👉 **[FinTalk on Hugging Face Spaces](https://huggingface.co/ spaces/fetii/FinTalk)**
 
 *(The Space runs a lightweight version of the same system)*
 
@@ -189,7 +189,6 @@ model_kwargs = {
 }
 ```
 
----
 
 ## 📘 License
 
