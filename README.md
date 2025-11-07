@@ -223,8 +223,6 @@ The project combines natural language generation, speech synthesis, and document
 
 **⭐ Star this project if you find it interesting!**
 
-For questions or feedback, feel free to open an [Issue](../../issues).
-
 **Disclaimer:** This tool generates AI-based opinions for educational purposes only. Always consult professional financial advisors for investment decisions.
 
 </div>
