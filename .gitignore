@@ -1,0 +1,6 @@
+models/
+*.gguf
+*.mp3
+*.pdf
+.env
+__pycache__/

@@ -1,0 +1,8 @@
+gradio
+llama-cpp-python==0.2.85
+reportlab
+openai
+edge-tts
+python-dotenv
+huggingface_hub
+
