@@ -91,7 +91,7 @@ Then open your browser.
 
 Try the live demo on Hugging Face Spaces:
 
-👉 **[FinTalk on Hugging Face Spaces](https://huggingface.co/ spaces/fetii/FinTalk)**
+👉 **[FinTalk on Hugging Face Spaces](https://huggingface.co/spaces/fetii/FinTalk)**
 
 *(The Space runs a lightweight version of the same system)*
 
