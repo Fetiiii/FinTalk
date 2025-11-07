@@ -93,7 +93,11 @@ Try the live demo on Hugging Face Spaces:
 
 👉 **[FinTalk on Hugging Face Spaces](https://huggingface.co/spaces/fetii/FinTalk)**
 
-*(The Space runs a lightweight version of the same system)*
+*Note: Due to Microsoft Edge TTS API limitations, the speech synthesis feature doesn’t work on the Hugging Face demo.
+Instead, we use an open-source offline TTS model as an alternative.
+The demo runs significantly slower on Hugging Face compared to local execution, but it’s useful to get a general idea of how FinTalk looks and behaves.*
+
+*For full performance, run locally.*
 
 ---
 
