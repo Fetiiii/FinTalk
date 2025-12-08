@@ -1,7 +1,3 @@
-# ==========================================
-# FinTalk - Backend (llama-cpp + GPT summary)
-# ==========================================
-
 import os
 import re
 from typing import Dict
@@ -14,14 +10,8 @@ import reportlab
 
 load_dotenv()  
 
-# -----------------------------------------------------
-# 1) MODEL YOLU (GGUF) - KENDİ YOLUNU YAZ
-# -----------------------------------------------------
 model_path = r"C:/Users/cagri/.lmstudio/models/QuantFactory/Llama-3-8B-Instruct-Finance-RAG-GGUF/Llama-3-8B-Instruct-Finance-RAG.Q4_K_S.gguf"
-# -----------------------------------------------------
-# 2) LLAMA-CPP MODEL YÜKLEME
-#    n_ctx=4096 yeterli; 8192 istersen RAM artar. Uyarı görürsen önemsemeyebilirsin.
-# -----------------------------------------------------
+
 llm = Llama(
     model_path=model_path,
     n_ctx=4096,
@@ -30,18 +20,14 @@ llm = Llama(
     verbose=False
 )
 
-# -----------------------------------------------------
-# 3) OPENAI (Özetleme)
-# -----------------------------------------------------
+
 OPENAI_API_KEY = os.getenv("API_KEY")
 if not OPENAI_API_KEY:
     raise RuntimeError("API_KEY bulunamadı. Lütfen .env veya sistem değişkenlerine ekleyin.")
 client = OpenAI(api_key=OPENAI_API_KEY)
 SUMMARY_MODEL = os.getenv("SUMMARY_MODEL", "gpt-4o-mini")
 
-# -----------------------------------------------------
-# 4) PERSONA PROMPTLAR (sade)
-# -----------------------------------------------------
+
 SYSTEM_MODERATOR = (
     "You are Selin, the moderator of an economics roundtable. "
     "Be neutral, brief, and structured. Guide the flow without giving opinions."
@@ -59,12 +45,10 @@ SYSTEM_BEARISH = (
     "(inflation persistence, liquidity stress, policy uncertainty). Be analytical; end with one cautionary insight."
 )
 
-# -----------------------------------------------------
-# 5) YARDIMCI: Post-process (meta notları, personayı ifşa eden satırları temizle)
-# -----------------------------------------------------
+
 _META_PATTERNS = [
-    r"(?i)\bnote:\b.*",                 # "Note:" ile başlayan meta
-    r"(?i)\bi am (selin|bullish|bearish).*$",  # "I am ..." persona ifşaları
+    r"(?i)\bnote:\b.*",                 
+    r"(?i)\bi am (selin|bullish|bearish).*$", 
     r"(?i)\bthis response was written\b.*",
     r"(?i)\bplease review\b.*",
     r"(?i)\bclarity and readability\b.*",
@@ -73,18 +57,15 @@ def _clean(text: str) -> str:
     cleaned = text.strip()
     for pat in _META_PATTERNS:
         cleaned = re.sub(pat, "", cleaned, flags=re.MULTILINE)
-    # aşırı boşlukları toparla
     cleaned = re.sub(r"\n{3,}", "\n\n", cleaned).strip()
     return cleaned
 
-# -----------------------------------------------------
-# 6) TEK PERSONA CEVABI (chat completion + context reset)
-# -----------------------------------------------------
+
 def generate_as(system_prompt: str, user_text: str, max_tokens: int = 480, temperature: float = 0.7) -> str:
     """
     Her çağrıda temiz context: create_chat_completion kullanıyoruz.
     """
-    # olası KV cache etkisini azaltmak için reset
+    
     llm.reset()
     out = llm.create_chat_completion(
         messages=[
@@ -99,21 +80,17 @@ def generate_as(system_prompt: str, user_text: str, max_tokens: int = 480, tempe
     text = out["choices"][0]["message"]["content"]
     return _clean(text)
 
-# -----------------------------------------------------
-# 7) TARTIŞMA AKIŞI
-# -----------------------------------------------------
+
+
 def fintalk_discussion(news_text: str) -> Dict[str, str]:
     print("🧩 FinTalk simulation started...\n")
 
-    # Ortak mesaj zinciri (tek context)
     messages = []
 
-    # 1️⃣ Selin başlatıyor
     selin_intro = generate_as(SYSTEM_MODERATOR, f"Open the discussion about: {news_text}.")
     messages.append(f"Selin: {selin_intro}")
     print("Moderator Intro:\n", selin_intro, "\n")
 
-    # 2️⃣ Bullish konuşuyor
     bullish_view = generate_as(
         SYSTEM_BULLISH,
         f"The moderator introduced the topic: {news_text}. Respond with your opening bullish perspective."
@@ -121,7 +98,6 @@ def fintalk_discussion(news_text: str) -> Dict[str, str]:
     messages.append(f"Bullish Investor: {bullish_view}")
     print("Bullish Investor:\n", bullish_view, "\n")
 
-    # 3️⃣ Bearish karşılık veriyor
     bearish_view = generate_as(
         SYSTEM_BEARISH,
         f"The moderator introduced the topic: {news_text}. "
@@ -131,7 +107,6 @@ def fintalk_discussion(news_text: str) -> Dict[str, str]:
     messages.append(f"Bearish Economist: {bearish_view}")
     print("Bearish Economist:\n", bearish_view, "\n")
 
-    # 4️⃣ Selin toparlıyor (konuya referans ver)
     selin_wrap = generate_as(
         SYSTEM_MODERATOR,
         f"Based on the debate about {news_text}, summarize their main differences and close the panel politely."
@@ -139,7 +114,7 @@ def fintalk_discussion(news_text: str) -> Dict[str, str]:
     messages.append(f"Selin: {selin_wrap}")
     print("Moderator Wrap-up:\n", selin_wrap, "\n")
 
-    # 5️⃣ GPT özetleme
+    
     debate_text = "\n".join(messages)
     summary_prompt = (
         "Summarize this debate between a bullish and a bearish economist in 5 bullet points. "
@@ -202,9 +177,7 @@ async def generate_tts_files(result):
         await edge_tts.Communicate(text, voice=voice, rate="+0%").save(filename)
         print(f"✅ {filename} oluşturuldu")
 
-# -----------------------------------------------------
-# 8) Hızlı Test
-# -----------------------------------------------------
+
 if __name__ == "__main__":
     topic = input("What's discussion topic ?\n>")
     result = fintalk_discussion(topic)
