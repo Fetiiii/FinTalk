@@ -14,7 +14,7 @@ def run_fintalk(topic_text):
     pdf_path = "FinTalk_Report.pdf"
     export_to_pdf(result, pdf_path)
 
-    # TTS (async)
+    # TTS 
     try:
         asyncio.run(generate_tts_files(result))
     except Exception as e:
