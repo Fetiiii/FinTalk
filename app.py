@@ -1,13 +1,8 @@
-# ==========================================
-# FinTalk - Gradio UI
-# ==========================================
 import gradio as gr
 import asyncio
-from backend import fintalk_discussion, export_to_pdf, generate_tts_files  # senin fonksiyonların
+from backend import fintalk_discussion, export_to_pdf, generate_tts_files  
 
-# -----------------------------------------------------
 # Tartışmayı başlatan ana fonksiyon
-# -----------------------------------------------------
 def run_fintalk(topic_text):
     if not topic_text or len(topic_text.strip()) < 10:
         return "Please provide a valid economic topic.", "", "", "", "", None, None
@@ -38,9 +33,7 @@ def run_fintalk(topic_text):
     "moderator_wrap.mp3"
 )
 
-# -----------------------------------------------------
 # Gradio Arayüz
-# -----------------------------------------------------
 with gr.Blocks(theme=gr.themes.Soft()) as demo:
     gr.Markdown(
         """
@@ -92,8 +85,5 @@ with gr.Blocks(theme=gr.themes.Soft()) as demo:
 )
 
 
-# -----------------------------------------------------
-# Uygulama Başlat
-# -----------------------------------------------------
 if __name__ == "__main__":
     demo.launch()
